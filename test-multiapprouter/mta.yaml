@@ -1,0 +1,62 @@
+_schema-version: "3.2"
+ID: test-multiapprouter
+version: 0.0.1
+modules:
+- name: test-multiapprouter-approuter
+  type: approuter.nodejs
+  path: test-multiapprouter-approuter
+  requires:
+  - name: test-multiapprouter_html_repo_runtime
+  - name: uaa_test-multiapprouter
+  - name: test-multiapprouter-destination-service
+    group: destinations
+    properties:
+      forwardAuthToken: false
+      name: ui5
+      url: https://ui5.sap.com  
+  parameters:
+    disk-quota: 256M
+    memory: 256M
+# - name: test-multiapprouter_ui_deployer
+#   type: com.sap.application.content
+#   path: .
+#   requires:
+#   - name: test-multiapprouter_html_repo_host
+#     parameters:
+#       content-target: true
+resources:
+- name: test-multiapprouter_html_repo_runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+- name: uaa_test-multiapprouter
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: test-multiapprouter-xsuaa-service
+    service-plan: application
+# - name: test-multiapprouter_html_repo_host
+#   type: org.cloudfoundry.managed-service
+#   parameters:
+#     service: html5-apps-repo
+#     service-plan: app-host
+- name: test-multiapprouter-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: test-multiapprouter-destination-service
+    service-plan: lite    

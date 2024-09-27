@@ -1,0 +1,26 @@
+{
+  "xsappname": "test-multiapprouter",
+  "tenant-mode": "dedicated",
+  "description": "Security profile of called application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Display",
+      "description":"UAA Display"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "TestApp1",
+      "description": "TestApp1",
+      "scope-references": [
+        "$XSAPPNAME.Display"
+      ]
+    }
+  ],
+  "oauth2-configuration": {
+    "redirect-uris": [
+        "https://*.hana.ondemand.com/**",
+        "https://*.hanatrial.ondemand.com/**"
+    ]
+}   
+}
